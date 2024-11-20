@@ -176,6 +176,11 @@ RUN --mount=type=bind,from=build,src=/workspace/dist,target=/vllm-workspace/dist
 RUN --mount=type=cache,target=/root/.cache/pip \
     . /etc/environment && \
     python3 -m pip install https://github.com/flashinfer-ai/flashinfer/releases/download/v0.1.6/flashinfer-0.1.6+cu121torch2.4-cp${PYTHON_VERSION_STR}-cp${PYTHON_VERSION_STR}-linux_x86_64.whl
+
+# Install flute-kernel
+RUN --mount=type=cache,target=/root/.cache/pip \
+    python3 -m pip install flute-kernel
+
 COPY examples examples
 #################### vLLM installation IMAGE ####################
 
@@ -218,5 +223,5 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 ENV VLLM_USAGE_SOURCE production-docker-image
 
-ENTRYPOINT ["python3", "-m", "vllm.entrypoints.openai.api_server"]
+ENTRYPOINT ["python3", "-m", "flute.integrations.vllm vllm.entrypoints.openai.api_server"]
 #################### OPENAI API SERVER ####################
